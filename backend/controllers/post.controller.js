@@ -36,25 +36,25 @@ export const createPost = async (req, res) => {
 	try {
 		const { content, image } = req.body;
 
-		const newPost = new Post({
-			author: req.user._id,
-			content,
-			image: image ? await cloudinary.uploader.upload(image) : undefined,
-		});
-		// let newPost;
-		// if (image) {
-		// 	const imgResult = await cloudinary.uploader.upload(image);
-		// 	newPost = new Post({
-		// 		author: req.user._id,
-		// 		content,
-		// 		image: imgResult.secure_url,
-		// 	});
-		// } else {
-		// 	newPost = new Post({
-		// 		author: req.user._id,
-		// 		content,
-		// 	});
-		// }
+		// const newPost = new Post({
+		// 	author: req.user._id,
+		// 	content,
+		// 	image: image ? await cloudinary.uploader.upload(image) : undefined,
+		// });
+		let newPost;
+		if (image) {
+			const imgResult = await cloudinary.uploader.upload(image);
+			newPost = new Post({
+				author: req.user._id,
+				content,
+				image: imgResult.secure_url,
+			});
+		} else {
+			newPost = new Post({
+				author: req.user._id,
+				content,
+			});
+		}
 		await newPost.save();
 
 		res.status(201).json(newPost);
@@ -113,7 +113,7 @@ export const getPostById = async (req, res) => {
 		const postId = req.params.id;
 		const post = await Post.findById(postId)
 			.populate("author", "name username profilePicture headline")
-			.populate("comments.user", "name username profilePicture headline");
+			.populate("comments.user", "name profilePicture username headline");
 
 		res.status(200).json(post);
 	} catch (error) {
@@ -215,7 +215,6 @@ export const likePost = async (req, res) => {
 		}
 
 		await post.save();
-		
 		res.status(200).json(post);
 	} catch (error) {
 		console.error(error);
