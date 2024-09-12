@@ -28,7 +28,10 @@ export const markNotificationAsRead = async (req, res) => {
 		);
 
 		res.json(notification);
-	} catch (error) {}
+	} catch (error) {
+		console.error("Error in markNotificationAsRead controller:", error);
+		res.status(500).json({ message: "Server error" });
+	}
 };
 
 export const deleteNofification = async (req, res) => {
