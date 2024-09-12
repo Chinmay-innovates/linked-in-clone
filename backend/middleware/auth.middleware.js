@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 
 export const protectedRoute = async (req, res, next) => {
 	try {
-		const token = req.cookires["jwt-linkedin"];
+		const token = req.cookies["jwt-linkedin"];
 		if (!token)
 			return res
 				.status(401)
