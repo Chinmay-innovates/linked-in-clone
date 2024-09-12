@@ -17,7 +17,7 @@ export const sendWelcomeEmail = async (email, name, profileUrl) => {
 			category: "welcome",
 		});
 
-		console.log("Welcome Email sent succesffully", response);
+		console.log("Welcome Email sent succesfully", response);
 	} catch (error) {
 		throw error;
 	}
@@ -30,7 +30,7 @@ export const sendCommentNotificationEmail = async (
 	postUrl,
 	commentContent
 ) => {
-	const recipient = [{ email }];
+	const recipient = [{ email: recipientEmail }];
 
 	try {
 		const response = await mailtrapClient.send({
@@ -45,8 +45,30 @@ export const sendCommentNotificationEmail = async (
 			),
 			category: "comment_notification",
 		});
-		console.log("Comment Notification Email sent succesffully", response);
+		console.log("Comment Notification Email sent succesfully", response);
 	} catch (error) {
 		throw error;
 	}
+};
+
+export const sendConnectionAcceptedEmail = async (
+	senderName,
+	senderEmail,
+	recipientName,
+	profileUrl
+) => {
+	const recipient = [{ email: senderEmail }];
+	try {
+		const response = await mailtrapClient.send({
+			from: sender,
+			to: recipient,
+			subject: `${recipientName} accepted your connection request`,
+			html: createConnectionAcceptedEmailTemplate(
+				senderName,
+				recipientName,
+				profileUrl
+			),
+			category: "connection_accepted",
+		});
+	} catch (error) {}
 };
